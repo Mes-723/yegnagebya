@@ -55,12 +55,12 @@ npm run dev
 4. Note the public host and port
 
 **Step 2: Get the Public Database URL**
-- The URL format will be: `postgresql://postgres:cZOahYUEBQVIhWBbSyjioGRXgGOnASci@[PUBLIC_HOST]:[PORT]/railway`
+- The URL format will be: `postgresql://postgres:<PASSWORD>@<PUBLIC_HOST>:<PORT>/railway`
 - Replace `[PUBLIC_HOST]` and `[PORT]` with Railway's public endpoint details
 
 **Step 3: Update .env**
 ```env
-DATABASE_URL=postgresql://postgres:cZOahYUEBQVIhWBbSyjioGRXgGOnASci@[PUBLIC_HOST]:[PORT]/railway
+DATABASE_URL=postgresql://postgres:<PASSWORD>@<PUBLIC_HOST>:<PORT>/railway
 ```
 
 **Step 4: Start the Server**
