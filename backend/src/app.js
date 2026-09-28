@@ -11,7 +11,7 @@ if (!process.env.DATABASE_URL) {
 
 const express = require("express");
 const cors = require("cors");
-const uploadsPath = path.join(__dirname, "../uploads");
+const uploadsPath = process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, "../uploads");
 const { pool, ensureSchema } = require("./config/database");
 
 const app = express();

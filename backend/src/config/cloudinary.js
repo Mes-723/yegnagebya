@@ -6,6 +6,7 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const uploadsPath = process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, "../../uploads");
 
 const hasCloudinaryCredentials = [
   process.env.CLOUDINARY_CLOUD_NAME,
@@ -45,7 +46,7 @@ const cloudinaryStorage = new CloudinaryStorage({
 const localStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const folder = file.fieldname === "avatar" ? "avatars" : file.fieldname === "voice" ? "voices" : "products";
-    const destination = path.join(__dirname, "../../uploads", folder);
+    const destination = path.join(uploadsPath, folder);
     fs.mkdirSync(destination, { recursive: true });
     cb(null, destination);
   },
