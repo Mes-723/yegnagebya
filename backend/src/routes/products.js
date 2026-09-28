@@ -327,9 +327,9 @@ router.put("/:id", protect, upload.array("images", 5), async (req, res) => {
       const current = await query("SELECT images FROM products WHERE id = $1", [id]);
       const existingImages = Array.isArray(current.rows[0]?.images) ? current.rows[0].images : [];
       updates.push(`images = $${idx++}`);
-      values.push([...existingImages, ...newImages].slice(0, 5));
+      values.push([...newImages, ...existingImages].slice(0, 5));
       updates.push(`main_image = $${idx++}`);
-      values.push(existingImages[0] || newImages[0]);
+      values.push(newImages[0]);
     }
 
     values.push(id);
