@@ -39,11 +39,6 @@ router.get("/", async (req, res) => {
     });
     const normalizedCategory = normalizedCategories[0] || "";
 
-    // Livestock has its own catalog and should not appear in the general marketplace.
-    if (!normalizedCategory || normalizedCategory === "all") {
-      conditions.push("(c.slug IS NULL OR c.slug NOT IN ('livestock', 'asbeza', 'bonda', 'cloth'))");
-    }
-
     if (normalizedCategories.length > 0 && normalizedCategory !== "all") {
       const categoryValues = [...new Set(normalizedCategories)];
       const categoryParam = idx++;
