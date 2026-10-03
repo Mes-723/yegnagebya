@@ -1,4 +1,4 @@
-# YegnaGebiya Backend - Database Setup Guide
+# Wedaje Gebya Backend - Database Setup Guide
 
 ## Problem
 The database connection was failing with: `getaddrinfo ENOTFOUND postgres.railway.internal`

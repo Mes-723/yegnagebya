@@ -23,7 +23,7 @@ async function showTables() {
       "SELECT table_name FROM information_schema.tables WHERE table_schema='public' ORDER BY table_name"
     );
     
-    console.log("\n📊 YegnaGebiya Database Tables:\n");
+    console.log("\n📊 Wedaje Gebya Database Tables:\n");
     result.rows.forEach((row, i) => {
       console.log(`${i + 1}. ${row.table_name}`);
     });

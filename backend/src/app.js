@@ -1,4 +1,4 @@
-// Main Express server — YegnaGebiya Backend API
+// Main Express server — Wedaje Gebya Backend API
 
 const path = require("path");
 const fs = require("fs");
@@ -34,7 +34,7 @@ app.use("/uploads", express.static(uploadsPath));
 // ─── Health check ───────────────────────────
 app.get("/", (req, res) => {
   res.json({
-    message: "🏪 YegnaGebiya Market API",
+    message: "🏪 Wedaje Gebya API",
     version: "1.0.0",
     status: "running",
     country: "Ethiopia 🇪🇹",
@@ -88,7 +88,7 @@ const PORT = process.env.PORT || 3000;
         server.listen(port, "0.0.0.0");
       });
 
-      console.log(`\n🚀 YegnaGebiya API running on port ${port}`);
+      console.log(`\n🚀 Wedaje Gebya API running on port ${port}`);
       console.log(`📡 http://localhost:${port}`);
       console.log(`🇪🇹 Ethiopia's marketplace backend ready!\n`);
       break;

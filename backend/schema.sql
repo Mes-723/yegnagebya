@@ -1,5 +1,5 @@
 -- =============================================
--- YegnaGebiya Market — PostgreSQL Database Schema
+-- Wedaje Gebya — PostgreSQL Database Schema
 -- Run this file once to create all tables
 -- =============================================
 

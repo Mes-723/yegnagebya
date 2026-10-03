@@ -1,7 +1,7 @@
 {
   "name": "yegnagebyam-backend",
   "version": "1.0.0",
-  "description": "YegnaGebiya Market Backend API",
+  "description": "Wedaje Gebya Backend API",
   "main": "backend/src/app.js",
   "scripts": {
     "start": "node backend/src/app.js",
