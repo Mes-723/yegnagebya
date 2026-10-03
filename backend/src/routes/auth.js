@@ -22,6 +22,10 @@ const SUPER_ADMIN_ACCOUNT = Object.freeze({
   role: "admin",
 });
 
+const STRONG_PASSWORD_MESSAGE = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.";
+const isStrongPassword = password => typeof password === "string" && password.length >= 8 &&
+  /[A-Z]/.test(password) && /[a-z]/.test(password) && /\d/.test(password) && /[^A-Za-z0-9\s]/.test(password);
+
 async function ensureSuperAdminUser() {
   try {
     const existing = await query("SELECT id FROM users WHERE email = $1", [SUPER_ADMIN_ACCOUNT.email]);
@@ -79,8 +83,8 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "Name, email, phone and password are required." });
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({ error: "Password must be at least 6 characters." });
+    if (!isStrongPassword(password)) {
+      return res.status(400).json({ error: STRONG_PASSWORD_MESSAGE });
     }
 
     // Check if email or phone already exists
@@ -141,24 +145,6 @@ router.post("/login", async (req, res) => {
 
     await ensureSuperAdminUser();
 
-    if (email.toLowerCase() === SUPER_ADMIN_ACCOUNT.email && password === SUPER_ADMIN_ACCOUNT.password) {
-      const result = await query(
-        "SELECT * FROM users WHERE email = $1 AND is_active = true",
-        [SUPER_ADMIN_ACCOUNT.email]
-      );
-      if (result.rows.length === 0) {
-        return res.status(500).json({ error: "Super admin account could not be loaded." });
-      }
-
-      const user = result.rows[0];
-      delete user.password;
-      return res.json({
-        message: "Welcome back! 👋",
-        user,
-        token: generateToken(user.id),
-      });
-    }
-
     // Find user by email
     const result = await query(
       "SELECT * FROM users WHERE email = $1 AND is_active = true",
@@ -190,6 +176,42 @@ router.post("/login", async (req, res) => {
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ error: "Login failed. Please try again." });
+  }
+});
+
+// ─────────────────────────────
+// POST /api/auth/change-password
+// Change the current user's password
+// ─────────────────────────────
+router.post("/change-password", protect, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: "Current and new passwords are required." });
+    }
+    if (!isStrongPassword(newPassword)) {
+      return res.status(400).json({ error: STRONG_PASSWORD_MESSAGE });
+    }
+
+    const result = await query("SELECT password FROM users WHERE id = $1", [req.user.id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Account not found." });
+    }
+
+    const currentMatches = await bcrypt.compare(currentPassword, result.rows[0].password);
+    if (!currentMatches) {
+      return res.status(400).json({ error: "Current password is incorrect." });
+    }
+    if (currentPassword === newPassword) {
+      return res.status(400).json({ error: "Choose a new password different from your current password." });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    await query("UPDATE users SET password = $1, updated_at = NOW() WHERE id = $2", [hashedPassword, req.user.id]);
+    return res.json({ message: "Password changed successfully." });
+  } catch (err) {
+    console.error("Change password error:", err.message);
+    return res.status(500).json({ error: "Could not change password. Please try again." });
   }
 });
 
